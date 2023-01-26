@@ -1,8 +1,5 @@
 package com.camel.curso_camel;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.camel.builder.RouteBuilder;
 
 /**
@@ -18,8 +15,15 @@ public class MyRouteBuilder extends RouteBuilder {
         // here is a sample which set a raondom body then performs content
         // based routing on the message using method references
         from("timer:simple?period=1000")
-        .log("msj").end();
+        .log("disparador")
+        .setHeader("Cabecera1", constant("valor cabecera 1"))
+        .setBody(constant("msj a procesar"))
+        .to("direct:procesarMensaje").end();
 
+        from("direct:procesarMensaje")
+        .log("msj")
+        .log("body = ${body}, cabecera = ${header.Cabecera1}")
+        .end();
     }
 
 }
